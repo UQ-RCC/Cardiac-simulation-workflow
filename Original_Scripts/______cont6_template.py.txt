@@ -1,0 +1,58 @@
+# example function which outputs basic element information
+# Arguments:
+# mesh -> instance of Mesh class
+# filename -> character string for the name of the file to be created
+#             defaults to 'ELEMFILE if not specified
+def elementOutput( mesh, file="ELEMFILE"):
+  outStr = ''  # empty string used for output
+
+  # loop through all elements and display basis function number and global node numbers for each element
+  for ne in range( len(mesh.obj["elem_list"]) ):
+    outStr = outStr + 'Element # %s \n' % (ne+1)   # add to output string
+
+    # loop through number of geometric coordinates
+    for nj in range( len(mesh.obj["coord_basis_funcs"][ne-1]) ):
+      outStr = outStr + '\tCoordinate %s; Basis Function %s\n' % (nj+1, mesh.obj["coord_basis_funcs"][ne-1][nj])
+      outStr = outStr + '\t\tGlobal Node Numbers %s\n' % mesh.obj["global_node_nums"][ne][0]
+
+
+  print outStr  #output outStr to console
+
+  # write output to file
+  f = 'pcty/' + file
+  of = open( f , 'w' )  # open file for writting
+  of.write( outStr )          # write Str to file
+#end def elementOutput
+
+
+
+# example function which outputs basic nodes information
+# Arguments:
+# mesh -> instance of Mesh class
+# filename -> character string for the name of the file to be created
+#             defaults to 'NODEFILE if not specified
+def nodeOutput( mesh, file='NODEFILE' ):
+  outStr = ''
+
+  # loop through all nodes
+  for np in range( len(mesh.obj["node_nums"]) ):
+    outStr = outStr + 'Node # %s\n' % (np+1)
+
+    # loop through number of coordinates
+    # (assumes all nodes have the same number of coordinates as defined in the first element)
+    for nj in range( mesh.obj["num_of_coords"][0] ):
+      outStr = outStr + '\tCoordinate %s' % (nj+1)
+      outStr = outStr + '\tPosition: %s\n' % mesh.obj["derivs"][np][nj][0]
+
+
+  print outStr  #output outStr to console
+
+  # write output to file
+  f = 'pcty/' + file
+  of = open( f, 'w' )  # open file for writting
+  of.write( outStr )          # write Str to file
+#end def nodeOuput function
+
+elementOutput( self.stored_data.elem )
+nodeOutput( self.stored_data.nodes )
+
